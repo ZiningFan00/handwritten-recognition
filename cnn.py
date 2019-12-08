@@ -10,8 +10,8 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
 
 # read files
-train = scipy.io.loadmat('train_32x32.mat')
-test = scipy.io.loadmat('test_32x32.mat')
+train = scipy.io.loadmat('/Users/fanzining/CU/fall2019/5293/hw/individualProject/train_32x32.mat')
+test = scipy.io.loadmat('/Users/fanzining/CU/fall2019/5293/hw/individualProject/test_32x32.mat')
 X_train_RGB = train["X"]
 y_train = train["y"]
 len_train=len(y_train)
@@ -48,12 +48,14 @@ y_test = keras.utils.to_categorical(y_test, 11)
 #build cnn model 
 model = Sequential()
 model.add(Conv2D(64,kernel_size=3,activation='relu',input_shape=(32,32,1)))
-model.add(Conv2D(32,kernel_size=3,activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+model.add(Conv2D(64,kernel_size=3,activation='relu'))
 model.add(Flatten())
 model.add(Dense(11,activation='softmax'))
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=4,verbose=1)
+model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=12,verbose=1)
 score = model.evaluate(X_test, y_test, verbose=1)
 
 a=0
